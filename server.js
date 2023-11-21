@@ -36,6 +36,13 @@ app.get('/api/generateRandomPosts', (req, res) => {
   res.json({ message: 'Random blog posts generated', posts: blogPosts });
 });
 
+// Generate random user with avatar
+app.get('/api/randomUsers', (req, res) => {
+  const numUsersToGenerate = 10; // Change the number of users as needed
+  const generatedUsers = generateRandomUsers(numUsersToGenerate);
+  res.json({ message: 'Random users generated', users: generatedUsers });
+});
+
 // Function to generate random blog post data using '@faker-js/faker'
 const generateRandomBlogPosts = (numPosts) => {
   const randomPosts = [];
@@ -51,6 +58,25 @@ const generateRandomBlogPosts = (numPosts) => {
   }
 
   return randomPosts;
+};
+
+// Function to generate random users with avatars
+const generateRandomUsers = (numUsers) => {
+  const randomUsers = [];
+
+  for (let i = 0; i < numUsers; i++) {
+    const user = {
+      id: i + 1,
+      name: faker.internet.displayName(),      
+      email: faker.internet.email(),
+      age : faker.number.int({ min: 18, max: 60 }),
+      // gender: faker.helpers.arrayElement(['female', 'male']),
+      avatar: faker.internet.avatar()// Generate random avatar URL
+    };
+    randomUsers.push(user);
+  }
+
+  return randomUsers;
 };
 
 // Start the server
