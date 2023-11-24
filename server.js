@@ -1,9 +1,44 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+
 const { faker } = require('@faker-js/faker');
+const { v4: uuidv4 } = require('uuid');
+
 const app = express();
 
 app.use(bodyParser.json());
+
+//create category
+const categories = [
+  'Food', 
+  'Technology',
+  'Sports',
+  'Fashion',
+  'Business',
+  'Politics',
+  'Health',
+  'Travel',
+  'Education'
+];
+
+app.get('/api/categories', (req,res) => {
+  randomcat = [];
+
+  for (let i=0; i< 10; i++) {
+    randomcat.push(
+      {
+        id: uuidv4(),
+        category: categories[i],
+      }
+    )
+  }
+  
+
+  res.status(201).json(randomcat);
+})
+
+
+
 
 let blogPosts = [
   // Sample data remains here
@@ -48,8 +83,10 @@ const generateRandomBlogPosts = (numPosts) => {
   const randomPosts = [];
 
   for (let i = 0; i < numPosts; i++) {
+    const randomIndex = faker.number.int({ min: 0, max: categories.length - 1 });
     const post = {
       id: i + 1,
+      category: categories[randomIndex],
       title: faker.lorem.sentence(),
       content: faker.lorem.paragraphs(5),
       image: faker.image.urlLoremFlickr({ category: 'nature' }) 
@@ -78,6 +115,9 @@ const generateRandomUsers = (numUsers) => {
 
   return randomUsers;
 };
+
+
+
 
 // Start the server
 const PORT = process.env.PORT || 5000;
